@@ -1,37 +1,34 @@
 * {
-    box-sizing: border-box;
-  }
-  
-  body {
-    background-color: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    overflow: hidden;
-    margin: 0;
-    cursor: none;
-  }
-  
+  box-sizing: border-box;
+}
+
+body {
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  cursor: none;
+}
+
 #touchy-cursor {
-  left: 5vw;
-  position: absolute;
-  top: 7vw;
-  transform: scale(1);
-  transition: opacity .15s ease-in-out,transform .15s ease-in-out;
-  z-index: 1
+  position: fixed; /* Change from 'position: absolute' to 'position: fixed' */
+  transform: translate(-50%, -50%); /* Center the cursor image correctly */
+  transition: opacity 0.15s ease-in-out, transform 0.15s ease-in-out;
+  z-index: 1;
 }
 
 #touchy-cursor.active {
-  opacity: .5;
-  transform: scale(.5);
-  transition: opacity .15s ease-in-out,transform .15s ease-in-out
+  opacity: 0.5;
+  transform: scale(0.5) translate(-50%, -50%); /* Adjust scale and centering */
+  transition: opacity 0.15s ease-in-out, transform 0.15s ease-in-out;
 }
 
-#container,#fluid{
+#container, #fluid {
   height: 100%;
   position: absolute;
   width: 100%;
   z-index: 0;
 }
-
