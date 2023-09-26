@@ -16,49 +16,40 @@ document.addEventListener('mouseup', () => {
 });
 
 
-// when the mouse is clicked and dragged, the background will become painted
+// the canvas drawing part
 const canvas = document.getElementById('fluid');
-    const ctx = canvas.getContext('2d');
+const context = canvas.getContext('2d');
 
-    // Set canvas dimensions to match the container
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-    let isDrawing = false;
+let isDrawing = false;
 
-    // Function to draw on the canvas
-    function draw(e) {
-      if (!isDrawing) return;
-      ctx.strokeStyle = 'red';
-      ctx.lineWidth = 5;
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.moveTo(e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top);
-      ctx.lineTo(
-        e.clientX - canvas.getBoundingClientRect().left + 1,
-        e.clientY - canvas.getBoundingClientRect().top + 1
-      );
-      ctx.stroke();
-    }
+function startDrawing(event) {
+  isDrawing = true;
+  context.beginPath();
+  context.moveTo(
+    event.clientX - canvas.getBoundingClientRect().left,
+    event.clientY - canvas.getBoundingClientRect().top
+  );
+}
 
-    canvas.addEventListener('mousedown', () => {
-      isDrawing = true;
-    });
+function draw(event) {
+  if (!isDrawing) return;
 
-    canvas.addEventListener('mousemove', draw);
+  context.lineTo(
+    event.clientX - canvas.getBoundingClientRect().left,
+    event.clientY - canvas.getBoundingClientRect().top
+  );
+  context.stroke();
+}
 
-    document.addEventListener('mouseup', () => {
-      isDrawing = false;
-    });
+function stopDrawing() {
+  isDrawing = false;
+  context.closePath();
+}
 
-    
-    // document.addEventListener('mousedown', () => {
-    //     document.addEventListener('mousemove', paintBackground);
-    //     document.addEventListener('mouseup', removePaintListener);
-    //   });
-  
-    //   function removePaintListener() {
-    //     document.removeEventListener('mousemove', paintBackground);
-    //     document.removeEventListener('mouseup', removePaintListener);
-    //   }
+canvas.addEventListener('mousedown', startDrawing);
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', stopDrawing);
 
