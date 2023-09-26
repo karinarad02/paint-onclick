@@ -1,32 +1,64 @@
-const container = document.getElementById('container')
-const colors = ['#e74c3c', '#8e44ad', '#3498db', '#e67e22', '#2ecc71']
-const SQUARES = 500
 
-for(let i = 0; i < SQUARES; i++) {
-    // we create the square elemens dynamically
-    const square = document.createElement('div')
-    square.classList.add('square')
+// mouse replacement
+const cursor = document.getElementById('touchy-cursor');
 
-    //if the mouse is over the square, we call the setColor function
-    square.addEventListener('mouseover', () => setColor(square))
+document.addEventListener('mousemove', (e) => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+});
+
+document.addEventListener('mousedown', () => {
+  cursor.classList.add('active');
+});
+
+document.addEventListener('mouseup', () => {
+  cursor.classList.remove('active');
+});
+
+
+// when the mouse is clicked and dragged, the background will become painted
+const canvas = document.getElementById('fluid');
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas dimensions to match the container
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+
+    let isDrawing = false;
+
+    // Function to draw on the canvas
+    function draw(e) {
+      if (!isDrawing) return;
+      ctx.strokeStyle = 'red';
+      ctx.lineWidth = 5;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top);
+      ctx.lineTo(
+        e.clientX - canvas.getBoundingClientRect().left + 1,
+        e.clientY - canvas.getBoundingClientRect().top + 1
+      );
+      ctx.stroke();
+    }
+
+    canvas.addEventListener('mousedown', () => {
+      isDrawing = true;
+    });
+
+    canvas.addEventListener('mousemove', draw);
+
+    document.addEventListener('mouseup', () => {
+      isDrawing = false;
+    });
+
     
-    //if the mouse is out of the square, we call the removeColor function
-    square.addEventListener('mouseout', () => removeColor(square))
+    // document.addEventListener('mousedown', () => {
+    //     document.addEventListener('mousemove', paintBackground);
+    //     document.addEventListener('mouseup', removePaintListener);
+    //   });
+  
+    //   function removePaintListener() {
+    //     document.removeEventListener('mousemove', paintBackground);
+    //     document.removeEventListener('mouseup', removePaintListener);
+    //   }
 
-    container.appendChild(square)
-}
-
-function setColor(element) {
-   const color = getRandomColor()
-   element.style.background = color
-   element.style.boxShadow = `0 0 2px ${color}, 0 0 10px ${color}`
-}
-
-function removeColor(element) {
-   element.style.background = '#1d1d1d'
-   element.style.boxShadow = '0 0 2px #000'
-}
-
-function getRandomColor() {
-    return colors[Math.floor(Math.random() * colors.length)]
-}
