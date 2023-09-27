@@ -33,12 +33,12 @@ let config = {
     SIM_RESOLUTION: 128,
     DYE_RESOLUTION: 1024,
     CAPTURE_RESOLUTION: 512,
-    DENSITY_DISSIPATION: 1,
-    VELOCITY_DISSIPATION: 0.2,
-    PRESSURE: 0.8,
+    DENSITY_DISSIPATION: 1.5, //how fast the color goes away
+    VELOCITY_DISSIPATION: 0.5, //how fast they stop moving
+    PRESSURE: 0.5, //how strong the blow is (can run into each other and squiggle the screen)
     PRESSURE_ITERATIONS: 20,
-    CURL: 30,
-    SPLAT_RADIUS: 0.25,
+    CURL: 30, //vorticity
+    SPLAT_RADIUS: 0.6,
     SPLAT_FORCE: 6000,
     SHADING: true,
     COLORFUL: true,
@@ -123,8 +123,6 @@ function getWebGLContext (canvas) {
         formatRG = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
         formatR = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
     }
-
-    ga('send', 'event', isWebGL2 ? 'webgl2' : 'webgl', formatRGBA == null ? 'not supported' : 'supported');
 
     return {
         gl,
