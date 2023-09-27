@@ -1,67 +1,110 @@
 // Mouse replacement
-// const cursor = document.getElementById('touchy-cursor');
+const cursor = document.getElementById('touchy-cursor');
 
-// document.addEventListener('mousemove', (e) => {
-//   cursor.style.left = e.clientX + 'px';
-//   cursor.style.top = e.clientY + 'px';
-// });
+document.addEventListener('mousemove', (e) => {
+  //we subtract 30 to position the custom cursor
+  cursor.style.left = e.clientX-30 + 'px';
+  cursor.style.top = e.clientY-30 + 'px';
+});
 
-// document.addEventListener('mousedown', () => {
-//   cursor.classList.add('active');
-// });
+document.addEventListener('mousedown', () => {
+  cursor.classList.add('active');
+});
 
-// document.addEventListener('mouseup', () => {
-//   cursor.classList.remove('active');
-// });
-//!!!!!!!!!!!!!!!!!!!!CAN'T DRAW WITH CUSTOM CURSOR!!!!!!!!!!!!!!
+document.addEventListener('mouseup', () => {
+  cursor.classList.remove('active');
+});
+
 
 // The canvas drawing part
-const canvas = document.getElementById('fluid');
-const context = canvas.getContext('2d');
+"use strict";
+
+const canvas = document.getElementById("fluid");
+const ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let isDrawing = false;
-let lastX = 0;
-let lastY = 0;
+let time = 0;
+let brushSize = 100;
 
-function startDrawing(event) {
-  isDrawing = true;
-  [lastX, lastY] = [event.clientX - canvas.getBoundingClientRect().left, event.clientY - canvas.getBoundingClientRect().top];
-  context.beginPath();
-  context.moveTo(lastX, lastY);
+ctx.lineCap = "round";
+
+let mouseDown = false;
+
+window.addEventListener("mousedown", () => {
+  mouseDown = true;
+});
+
+window.addEventListener("mouseup", () => {
+  mouseDown = false;
+});
+
+window.addEventListener("touchstart", () => {
+  mouseDown = true;
+});
+
+window.addEventListener("touchend", () => {
+  mouseDown = false;
+});
+
+const mouse = { x: undefined, y: undefined };
+
+document.addEventListener("mousemove", (e) => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+
+  draw();
+});
+
+document.body.addEventListener("touchmove", (e) => {
+  const touch = e.touches[0] || e.changedTouches[0];
+  mouse.x = touch.clientX;
+  mouse.y = touch.clientY;
+
+  draw();
+});
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  time = 0;
 }
 
-function draw(event) {
-  if (!isDrawing) return;
+window.addEventListener("resize", resize);
 
-  const [x, y] = [event.clientX - canvas.getBoundingClientRect().left, event.clientY - canvas.getBoundingClientRect().top];
+function draw() {
+  ctx.fillStyle = "red";
+  ctx.strokeStyle = `hsl(${time}, 100%, 50%)`;
+  ctx.lineWidth = 2;
+  ctx.shadowBlur = 30;
+  ctx.shadowColor = `hsl(${time}, 100%, 30%)`;
 
-  context.lineJoin = 'round';
-  context.lineCap = 'round';
-  context.lineWidth = 10; // Increase the line width for a fire-like effect
-  const gradient = context.createLinearGradient(lastX, lastY, x, y);
-  gradient.addColorStop(0, 'orange'); // Starting color
-  gradient.addColorStop(0.2, 'red'); // Middle color
-  gradient.addColorStop(0.4, 'orange'); // Middle color
-  gradient.addColorStop(0.6, 'red'); // Middle color
-  gradient.addColorStop(0.8, 'orange'); // Middle color
-  gradient.addColorStop(1, 'red'); // Ending color
-  context.strokeStyle = gradient;
+  ctx.beginPath();
 
-  context.beginPath();
-  context.moveTo(lastX, lastY);
-  context.lineTo(x, y);
-  context.stroke();
+  if (mouseDown) {
+    ctx.moveTo(mouse.x, mouse.y);
 
-  [lastX, lastY] = [x, y];
+    for (let i = 0; i < 60; i++) {
+      ctx.lineTo(
+        mouse.x + Math.random() * brushSize - brushSize / 2,
+        mouse.y + Math.random() * brushSize - brushSize / 2
+      );
+      ctx.moveTo(mouse.x, mouse.y);
+    }
+    ctx.moveTo(0, 0);
+  }
+  ctx.stroke();
 }
 
-function stopDrawing() {
-  isDrawing = false;
+function animate() {
+  ctx.fillStyle = "rgba(0,0,0,0.035)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  time++;
+
+  requestAnimationFrame(animate);
 }
 
-canvas.addEventListener('mousedown', startDrawing);
-canvas.addEventListener('mousemove', draw);
-canvas.addEventListener('mouseup', stopDrawing);
+animate();
+
