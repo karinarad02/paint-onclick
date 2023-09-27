@@ -17,94 +17,106 @@ document.addEventListener('mouseup', () => {
 
 
 // The canvas drawing part
-"use strict";
+// "use strict";
 
-const canvas = document.getElementById("fluid");
-const ctx = canvas.getContext("2d");
+// const canvas = document.getElementById("fluid");
+// const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// canvas.width = window.innerWidth;
+// canvas.height = window.innerHeight;
 
-let time = 0;
-let brushSize = 100;
+// const fluidSimulator = new FluidSimulator(canvas);
 
-ctx.lineCap = "round";
+// let time = 0;
+// let brushSize = 100;
 
-let mouseDown = false;
+// ctx.lineCap = "round";
 
-window.addEventListener("mousedown", () => {
-  mouseDown = true;
-});
+// let mouseDown = false;
 
-window.addEventListener("mouseup", () => {
-  mouseDown = false;
-});
+// window.addEventListener("mousedown", () => {
+//   mouseDown = true;
+// });
 
-window.addEventListener("touchstart", () => {
-  mouseDown = true;
-});
+// window.addEventListener("mouseup", () => {
+//   mouseDown = false;
+// });
 
-window.addEventListener("touchend", () => {
-  mouseDown = false;
-});
+// window.addEventListener("touchstart", () => {
+//   mouseDown = true;
+// });
 
-const mouse = { x: undefined, y: undefined };
+// window.addEventListener("touchend", () => {
+//   mouseDown = false;
+// });
 
-document.addEventListener("mousemove", (e) => {
-  mouse.x = e.clientX;
-  mouse.y = e.clientY;
+// const mouse = { x: undefined, y: undefined };
 
-  draw();
-});
+// document.addEventListener("mousemove", (e) => {
+//   mouse.x = e.clientX;
+//   mouse.y = e.clientY;
 
-document.body.addEventListener("touchmove", (e) => {
-  const touch = e.touches[0] || e.changedTouches[0];
-  mouse.x = touch.clientX;
-  mouse.y = touch.clientY;
+//   if (mouseDown) {
+//     fluidSimulator.addVelocity(mouse.x, mouse.y);
+//   }
 
-  draw();
-});
+//   draw();
+// });
 
-function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+// document.body.addEventListener("touchmove", (e) => {
+//   const touch = e.touches[0] || e.changedTouches[0];
+//   mouse.x = touch.clientX;
+//   mouse.y = touch.clientY;
 
-  time = 0;
-}
+//   if (mouseDown) {
+//     fluidSimulator.addVelocity(mouse.x, mouse.y);
+//   }
 
-window.addEventListener("resize", resize);
+//   draw();
+// });
 
-function draw() {
-  ctx.fillStyle = "red";
-  ctx.strokeStyle = `hsl(${time}, 100%, 50%)`;
-  ctx.lineWidth = 2;
-  ctx.shadowBlur = 30;
-  ctx.shadowColor = `hsl(${time}, 100%, 30%)`;
+// function resize() {
+//   canvas.width = window.innerWidth;
+//   canvas.height = window.innerHeight;
+//   fluidSimulator.setResolution(canvas.width, canvas.height);
 
-  ctx.beginPath();
+//   time = 0;
+// }
 
-  if (mouseDown) {
-    ctx.moveTo(mouse.x, mouse.y);
+// window.addEventListener("resize", resize);
 
-    for (let i = 0; i < 60; i++) {
-      ctx.lineTo(
-        mouse.x + Math.random() * brushSize - brushSize / 2,
-        mouse.y + Math.random() * brushSize - brushSize / 2
-      );
-      ctx.moveTo(mouse.x, mouse.y);
-    }
-    ctx.moveTo(0, 0);
-  }
-  ctx.stroke();
-}
+// function draw() {
+//   ctx.fillStyle = "red";
+//   ctx.strokeStyle = `hsl(${time}, 100%, 50%)`;
+//   ctx.lineWidth = 2;
+//   ctx.shadowBlur = 30;
+//   ctx.shadowColor = `hsl(${time}, 100%, 30%)`;
 
-function animate() {
-  ctx.fillStyle = "rgba(0,0,0,0.035)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  time++;
+//   ctx.beginPath();
 
-  requestAnimationFrame(animate);
-}
+//   if (mouseDown) {
+//     ctx.moveTo(mouse.x, mouse.y);
 
-animate();
+//     for (let i = 0; i < 60; i++) {
+//       ctx.lineTo(
+//         mouse.x + Math.random() * brushSize - brushSize / 2,
+//         mouse.y + Math.random() * brushSize - brushSize / 2
+//       );
+//       ctx.moveTo(mouse.x, mouse.y);
+//     }
+//     ctx.moveTo(0, 0);
+//   }
+//   ctx.stroke();
+// }
 
+// function animate() {
+//   fluidSimulator.update();
+//   ctx.fillStyle = "rgba(0,0,0,0.035)";
+//   ctx.fillRect(0, 0, canvas.width, canvas.height);
+//   time++;
+
+//   requestAnimationFrame(animate);
+// }
+
+// resize(); // Call resize once to initialize the fluid simulator
+// animate();
